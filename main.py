@@ -4,7 +4,6 @@ MaybeFunction = Union[Callable, None]
 
 
 class Maybe:
-
     def __init__(self, value: Any, *, allow_none: bool = False) -> None:
         self.value: Any = value
         self.allow_none: bool = allow_none
@@ -30,15 +29,19 @@ class Maybe:
 
         function_result = self.function(self.value, *self.args, **self.kwargs)
 
-        self.result = (function_result
-                       if isinstance(function_result, Maybe)
-                       else Maybe.wrap(value=function_result, allow_none=self.allow_none))
+        self.result = (
+            function_result
+            if isinstance(function_result, Maybe)
+            else Maybe.wrap(value=function_result, allow_none=self.allow_none)
+        )
 
         self._log_after_function_call()
         self._raise_error_if_result_is_none()
         return self.result
 
-    def _collect_function_data(self, function: MaybeFunction, args: tuple[Any], kwargs: dict[str, Any]) -> None:
+    def _collect_function_data(
+        self, function: MaybeFunction, args: tuple[Any], kwargs: dict[str, Any]
+    ) -> None:
         self.function = function
         self.args = args
         self.kwargs = kwargs
@@ -46,7 +49,9 @@ class Maybe:
 
     def _raise_error_if_result_is_none(self) -> None:
         if not self.allow_none and self.result.value is None:
-            raise ValueError(f"Using function '{self.function_name}': Value cannot be none")
+            raise ValueError(
+                f"Using function '{self.function_name}': Value cannot be none"
+            )
 
     def _log_before_function_call(self) -> None:
         m = f"Then function '{self.function_name}' applying to value {self.value} - with args {self.args} and with kwargs {self.kwargs}"
@@ -60,6 +65,7 @@ class Maybe:
     def _log_if_none(self) -> None:
         m = f"None value is allowed and value is none. Function {self.function_name} with args {self.args} and {self.kwargs} is not called and none is returned instead"
         print(m)
+
 
 def multiply_4(n):
     """Multiply by 4"""
@@ -79,7 +85,7 @@ def add_2(n, *args, **kwargs):
 
 
 def subtract_18(n):
-    return n-18
+    return n - 18
 
 
 def main():
