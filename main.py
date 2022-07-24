@@ -1,4 +1,4 @@
-from typing import Any, Callable, Union
+from typing import Any, Callable, Union, Tuple, Dict
 
 MaybeFunction = Union[Callable, None]
 
@@ -7,11 +7,11 @@ class Maybe:
     def __init__(self, value: Any, *, allow_none: bool = False) -> None:
         self.value: Any = value
         self.allow_none: bool = allow_none
-        self.function: MaybeFunction | None = None
-        self.args: Any | None = None
-        self.kwargs: Any | None = None
-        self.function_name: str | None = None
-        self.result: Maybe | None = None
+        self.function: Union[MaybeFunction, None] = None
+        self.args: Union[Any, None] = None
+        self.kwargs: Union[Any, None] = None
+        self.function_name: Union[str, None] = None
+        self.result: Union[Maybe, None] = None
 
     @classmethod
     def wrap(cls, value: Any, *, allow_none: bool) -> "Maybe":
@@ -40,7 +40,7 @@ class Maybe:
         return self.result
 
     def _collect_function_data(
-        self, function: MaybeFunction, args: tuple[Any], kwargs: dict[str, Any]
+        self, function: MaybeFunction, args: Tuple[Any], kwargs: Dict[str, Any]
     ) -> None:
         self.function = function
         self.args = args
